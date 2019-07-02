@@ -52,7 +52,9 @@ main (int argc, char *argv[])
   fd_set rfds;
   int retval, i, j, baud = -1;
   int stamp = 0;
+#ifndef __APPLE__
   timer_t timerid;
+#endif
   struct sigevent sevp;
   sevp.sigev_notify = SIGEV_SIGNAL;
   sevp.sigev_signo = SIGINT;
@@ -77,11 +79,17 @@ main (int argc, char *argv[])
       if (!strcmp (argv[i], "-h") || !strcmp (argv[i], "--help"))
         {
           printf ("ttylog version %s\n", TTYLOG_VERSION);
+#ifndef __APPLE__
           printf ("Usage:  ttylog [-b|--baud] [-d|--device] [-f|--flush] [-s|--stamp] [-t|--timeout] > /path/to/logfile\n");
+#else
+          printf ("Usage:  ttylog [-b|--baud] [-d|--device] [-f|--flush] [-s|--stamp] > /path/to/logfile\n");
+#endif
           printf (" -h, --help	This help\n -v, --version	Version number\n -b, --baud	Baud rate\n");
           printf (" -d, --device	Serial device (eg. /dev/ttyS1)\n -f, --flush	Flush output\n");
           printf (" -s, --stamp\tPrefix each line with datestamp\n");
+#ifndef __APPLE__
           printf (" -t, --timeout  How long to run, in seconds.\n");
+#endif
           printf ("ttylog home page: <http://ttylog.sourceforge.net/>\n\n");
           exit (0);
         }
@@ -141,6 +149,10 @@ main (int argc, char *argv[])
 
     if (!strcmp (argv[i], "-t") || !strcmp (argv[i], "--timeout"))
       {
+#ifdef __APPLE__
+        printf ("ERROR: --timeout / -t option not available on macOS\n\n");
+        exit (1);
+#else
         if (argv[i + 1] == NULL)
           {
             printf ("%s: invalid time span %s\n", argv[0], argv[i + 1]);
@@ -167,6 +179,7 @@ main (int argc, char *argv[])
             printf ("%s: unable to set timer time: %s\n", argv[0], strerror(errno));
             exit (0);
           }
+#endif
       }
     }
 

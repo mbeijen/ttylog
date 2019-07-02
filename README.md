@@ -21,6 +21,8 @@ If you are not using the timeout option, you can stop it running by pressing a
 ctrl-c when it's going to the screen or doing 'kill -HUP nnnn' if running it in
 the background.
 
+The timeout option is not available on macOS.
+
 Web sites
 -----------
 
@@ -41,8 +43,3 @@ https://sourceforge.net/p/ttylog/bugs/
 https://sourceforge.net/p/ttylog/patches/
 https://sourceforge.net/p/ttylog/feature-requests/
 https://github.com/rocasa/ttylog/issues
-
-
-
-
-
